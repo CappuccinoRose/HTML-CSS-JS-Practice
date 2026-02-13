@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统控制面板</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #1a1a2e;
+            margin-bottom: 30px;
+        }
+
+        /* 卡片通用样式 */
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .card-header .icon {
+            width: 24px;
+            height: 24px;
+            background: #e8f4fd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        /* ========== 智能搜索框 ========== */
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4a90d9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-tip {
+            margin-top: 10px;
+            font-size: 13px;
+            color: #888;
+        }
+
+        /* ========== 进度条区域 ========== */
+        .upload-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .upload-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .file-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #888;
+        }
+
+        .file-percent {
+            font-size: 12px;
+            color: #4a90d9;
+            font-weight: 500;
+        }
+
+        /* 原生 progress 美化 */
+        progress {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        progress::-webkit-progress-bar {
+            background: #e8e8e8;
+            border-radius: 3px;
+        }
+
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, #4a90d9, #67b26f);
+            border-radius: 3px;
+            transition: width 0.3s;
+        }
+
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, #4a90d9, #67b26f);
+            border-radius: 3px;
+        }
+
+        /* ========== 磁盘空间 ========== */
+        .disk-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .disk-item {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .disk-icon {
+            width: 44px;
+            height: 44px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .disk-info {
+            flex: 1;
+        }
+
+        .disk-name {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .disk-desc {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        /* 原生 meter 美化 */
+        meter {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        meter::-webkit-meter-bar {
+            background: #e8e8e8;
+            border-radius: 4px;
+        }
+
+        /* 安全 - 绿色 */
+        meter::-webkit-meter-optimum-value {
+            background: #67b26f;
+            border-radius: 4px;
+        }
+
+        /* 警告 - 黄色 */
+        meter::-webkit-meter-suboptimum-value {
+            background: #f5a623;
+            border-radius: 4px;
+        }
+
+        /* 危险 - 红色 */
+        meter::-webkit-meter-even-less-good-value {
+            background: #ff4757;
+            border-radius: 4px;
+        }
+
+        .disk-status {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+        }
+
+        .disk-used {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .disk-status-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-safe { color: #67b26f; }
+        .status-warning { color: #f5a623; }
+        .status-danger { color: #ff4757; }
+
+        /* 按钮 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #4a90d9;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3a7bc8;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* 搜索结果展示 */
+        .search-result {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .search-result.show {
+            display: block;
+        }
+
+        .search-result h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .search-result p {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>系统控制面板</h1>
+
+        <!-- 智能搜索 -->
+        <div class="card">
+            <div class="card-header">
+                <span class="icon">🔍</span>
+                <h2>快速搜索</h2>
+            </div>
+            <div class="search-wrapper">
+                <span class="search-icon">🔎</span>
+                <input type="text" list="quick-links" class="search-input" placeholder="搜索功能、设置或文件..." id="searchInput">
+                <datalist id="quick-links">
+                    <option value="用户管理">
+                    <option value="系统设置">
+                    <option value="存储空间">
+                    <option value="网络配置">
+                    <option value="安全中心">
+                    <option value="备份恢复">
+                    <option value="日志查看">
+                    <option value="应用商店">
+                </datalist>
+            </div>
+            <p class="search-tip">输入关键词或从列表中选择快速跳转</p>
+            <div class="search-result" id="searchResult">
+                <h3>跳转到：<span id="resultTitle"></span></h3>
+                <p id="resultDesc"></p>
+            </div>
+        </div>
+
+        <!-- 文件上传进度 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>文件传输</h2>
+            </div>
+            <div class="upload-list">
+                <div class="upload-item">
+                    <div class="file-info">
+                        <div class="file-name">项目报告_2026.pdf</div>
+                        <div class="file-meta">
+                            <span class="file-size">2.4 MB / 3.2 MB</span>
+                            <span class="file-percent" id="percent1">75%</span>
+                        </div>
+                        <progress id="progress1" value="75" max="100"></progress>
+                    </div>
+                </div>
+                <div class="upload-item">
+                    <div class="file-info">
+                        <div class="file-name">设计稿_v3.png</div>
+                        <div class="file-meta">
+                            <span class="file-size">4.8 MB / 12.5 MB</span>
+                            <span class="file-percent" id="percent2">38%</span>
+                        </div>
+                        <progress id="progress2" value="38" max="100"></progress>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" id="uploadBtn">模拟上传</button>
+                <button class="btn btn-secondary" id="resetBtn">重置</button>
+            </div>
+        </div>
+
+        <!-- 磁盘空间 -->
+        <div class="card">
+            <div class="card-header">
+                <h2>存储空间</h2>
+            </div>
+            <div class="disk-list">
+                <div class="disk-item">
+                    <div class="disk-info">
+                        <div class="disk-name">系统盘 (C:)</div>
+                        <div class="disk-desc">系统文件、应用程序</div>
+                        <meter value="0.45" min="0" max="1" low="0.3" high="0.7" optimum="0.4"></meter>
+                        <div class="disk-status">
+                            <span class="disk-used">45 GB / 100 GB</span>
+                            <span class="disk-status-text status-safe">状态良好</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="disk-item">
+                    <div class="disk-info">
+                        <div class="disk-name">数据盘 (D:)</div>
+                        <div class="disk-desc">文档、媒体文件</div>
+                        <meter value="0.75" min="0" max="1" low="0.3" high="0.7" optimum="0.4"></meter>
+                        <div class="disk-status">
+                            <span class="disk-used">750 GB / 1 TB</span>
+                            <span class="disk-status-text status-warning">空间紧张</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="disk-item">
+                    <div class="disk-info">
+                        <div class="disk-name">云存储</div>
+                        <div class="disk-desc">同步文件、备份</div>
+                        <meter value="0.92" min="0" max="1" low="0.3" high="0.7" optimum="0.4"></meter>
+                        <div class="disk-status">
+                            <span class="disk-used">92 GB / 100 GB</span>
+                            <span class="disk-status-text status-danger">即将已满</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 搜索功能
+        const searchInput = document.getElementById('searchInput');
+        const searchResult = document.getElementById('searchResult');
+        const resultTitle = document.getElementById('resultTitle');
+        const resultDesc = document.getElementById('resultDesc');
+
+        const pageMap = {
+            '用户管理': '管理用户账号、权限和角色分配',
+            '系统设置': '配置系统参数、显示和语言选项',
+            '存储空间': '查看磁盘使用情况，清理临时文件',
+            '网络配置': '管理网络连接、代理和DNS设置',
+            '安全中心': '病毒扫描、防火墙和安全日志',
+            '备份恢复': '创建系统备份，恢复历史版本',
+            '日志查看': '查看系统运行日志和错误报告',
+            '应用商店': '浏览和安装新的应用程序'
+        };
+
+        searchInput.addEventListener('change', () => {
+            const value = searchInput.value;
+            if (pageMap[value]) {
+                resultTitle.textContent = value;
+                resultDesc.textContent = pageMap[value];
+                searchResult.classList.add('show');
+            }
+        });
+
+        // 进度条模拟
+        const uploadBtn = document.getElementById('uploadBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progress1 = document.getElementById('progress1');
+        const progress2 = document.getElementById('progress2');
+        const percent1 = document.getElementById('percent1');
+        const percent2 = document.getElementById('percent2');
+
+        let timer1, timer2;
+
+        uploadBtn.addEventListener('click', () => {
+            // 清除之前的定时器
+            clearInterval(timer1);
+            clearInterval(timer2);
+
+            // 模拟上传进度
+            timer1 = setInterval(() => {
+                let val = parseInt(progress1.value);
+                if (val >= 100) {
+                    clearInterval(timer1);
+                    percent1.textContent = '已完成';
+                } else {
+                    progress1.value = val + Math.random() * 3;
+                    percent1.textContent = Math.round(progress1.value) + '%';
+                }
+            }, 100);
+
+            timer2 = setInterval(() => {
+                let val = parseInt(progress2.value);
+                if (val >= 100) {
+                    clearInterval(timer2);
+                    percent2.textContent = '已完成';
+                } else {
+                    progress2.value = val + Math.random() * 2;
+                    percent2.textContent = Math.round(progress2.value) + '%';
+                }
+            }, 150);
+        });
+
+        resetBtn.addEventListener('click', () => {
+            clearInterval(timer1);
+            clearInterval(timer2);
+            progress1.value = 75;
+            progress2.value = 38;
+            percent1.textContent = '75%';
+            percent2.textContent = '38%';
+        });
+    </script>
+</body>
+
+</html>

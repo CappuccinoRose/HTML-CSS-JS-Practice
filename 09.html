@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式图片切换</title>
+     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f4f3;
+            color: #3f4d4a;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #3a5a50;
+        }
+
+        .info-panel {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            background: #e8f0ef;
+            padding: 14px 20px;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 140px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #5a7a7a;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #4a7a6a;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border: 2px solid #cde0dc;
+            border-radius: 8px;
+            background: #f6fbf9;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            border-color: #8eb8a9;
+            background: #e8f5f0;
+        }
+
+        .btn.active {
+            border-color: #6c8f7e;
+            background: #dcebe5;
+            color: #3a5a50;
+        }
+
+        .picture-container {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .picture-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .picture-title {
+            font-size: 14px;
+            color: #5a7a7a;
+        }
+
+        .picture-status {
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .status-narrow {
+            background: #f2e8e8;
+            color: #a98a8a;
+        }
+
+        .status-wide {
+            background: #e2f0eb;
+            color: #6c8f7e;
+        }
+
+        picture {
+            display: block;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>响应式图片切换</h1>
+
+        <div class="info-panel">
+            <div class="info-item">
+                <div class="info-label">屏幕宽度</div>
+                <div class="info-value" id="screenWidth">--px</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">当前模式</div>
+                <div class="info-value" id="currentMode">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">图片版本</div>
+                <div class="info-value" id="currentVersion">--</div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button class="btn active" id="btnA">切换图B</button>
+            <button class="btn" id="btnB">切换图A</button>
+        </div>
+
+        <div class="picture-container">
+            <div class="picture-header">
+                <span class="picture-title">响应式图片展示</span>
+                <span class="picture-status" id="pictureStatus">--</span>
+            </div>
+
+            <picture id="pic">
+                <source 
+                    media="(max-width: 685px)"
+                    srcset="https://c-ssl.dtstatic.com/uploads/blog/202401/13/4ESd8g1jioMlYvz.thumb.400_0.jpg"
+                    sizes="100vw">
+                
+                <source 
+                    media="(min-width: 601px)"
+                    srcset="https://c-ssl.dtstatic.com/uploads/blog/202306/22/lGS13Jvbux0Zpqj.thumb.400_0.jpeg"
+                    sizes="100vw">
+                
+                <img 
+                    src="https://c-ssl.dtstatic.com/uploads/blog/202306/22/xDS5lvVXi2GJ57q.thumb.400_0.jpeg" 
+                    alt="响应式图片"
+                    id="mainImg">
+            </picture>
+        </div>
+    </div>
+
+    <script>
+        const btnA = document.getElementById('btnA');
+        const btnB = document.getElementById('btnB');
+        const pic = document.getElementById('pic');
+        const mainImg = document.getElementById('mainImg');
+        const screenWidthEl = document.getElementById('screenWidth');
+        const currentModeEl = document.getElementById('currentMode');
+        const currentVersionEl = document.getElementById('currentVersion');
+        const pictureStatusEl = document.getElementById('pictureStatus');
+
+        const configA = {
+            name: '图A',
+            narrow: 'https://c-ssl.dtstatic.com/uploads/blog/202306/22/lGS13Jvbux0Zpqj.thumb.400_0.jpeg',
+            wide: 'https://c-ssl.dtstatic.com/uploads/blog/202401/13/4ESd8g1jioMlYvz.thumb.400_0.jpg'
+        };
+
+        const configB = {
+            name: '图B',
+            narrow: 'https://c-ssl.dtstatic.com/uploads/blog/202306/22/xDS5lvVXi2GJ57q.thumb.400_0.jpeg',
+            wide: 'https://c-ssl.dtstatic.com/uploads/blog/202212/02/20221202162415_4e29b.thumb.400_0.jpg'
+        };
+
+        let currentConfig = configA;
+
+        function updatePicture(config) {
+            currentConfig = config;
+            
+            const sources = pic.querySelectorAll('source');
+            sources[0].srcset = config.narrow;
+            sources[1].srcset = config.wide;
+            mainImg.src = config.wide;
+
+            currentModeEl.textContent = config.name;
+            updateStatus();
+        }
+
+        function updateStatus() {
+            const width = window.innerWidth;
+            screenWidthEl.textContent = width + 'px';
+            
+            const isNarrow = width <= 685;
+            currentVersionEl.textContent = isNarrow ? '竖版' : '横版';
+            
+            pictureStatusEl.textContent = isNarrow ? '窄屏模式' : '宽屏模式';
+            pictureStatusEl.className = 'picture-status ' + (isNarrow ? 'status-narrow' : 'status-wide');
+        }
+
+        btnA.addEventListener('click', () => {
+            updatePicture(configA);
+            btnA.classList.add('active');
+            btnB.classList.remove('active');
+        });
+
+        btnB.addEventListener('click', () => {
+            updatePicture(configB);
+            btnB.classList.add('active');
+            btnA.classList.remove('active');
+        });
+
+        window.addEventListener('resize', updateStatus);
+        updateStatus();
+    </script>
+</body>
+</html>

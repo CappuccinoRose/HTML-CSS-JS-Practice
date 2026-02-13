@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>详情展开/收起</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        .details {
+            background-color: #ff6b6b;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            max-width: 400px;
+        }
+
+        .details-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .details-header::after {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+
+        .details.active .details-header::after {
+            transform: rotate(180deg);
+        }
+
+        .content {
+            background-color: #fff3cd;
+            display: none;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .details.active .content {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>这是一个标题</h1>
+    <p>这是一句话描述全文。</p>
+
+    <div class="details">
+        <div class="details-header">详情</div>
+        <div class="content">
+            <p>这是另一个段落。</p>
+            <p>这是另一个段落。</p>
+            <p>这是另一个段落。</p>
+            <p>这是另一个段落。</p>
+            <p>这是另一个段落。</p>
+        </div>
+    </div>
+
+    <script>
+        const details = document.querySelector('.details');
+        
+        details.addEventListener('click', function() {
+            this.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popover 菜单</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 40px;
+        }
+
+        /* 触发按钮 */
+        .menu-btn {
+            padding: 10px 16px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: #555;
+        }
+
+        /* 弹出菜单 */
+        ul[popover] {
+            inset: auto;
+            margin: 0;
+            padding: 6px 0;
+            min-width: 120px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+
+        /* 动画 */
+        ul[popover]:popover-open {
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        ul[popover] li {
+            list-style: none;
+        }
+
+        ul[popover] li a {
+            display: block;
+            padding: 10px 16px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.15s;
+        }
+
+        ul[popover] li a:hover {
+            background: #f5f5f5;
+        }
+
+        /* 危险操作样式 */
+        ul[popover] li a.danger {
+            color: #ff4757;
+        }
+
+        ul[popover] li a.danger:hover {
+            background: #fff0f0;
+        }
+
+        /* 分隔线 */
+        ul[popover] li.divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 6px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="menu-btn" popovertarget="menu">打开菜单</button>
+
+    <ul id="menu" popover="auto">
+        <li><a href="#">编辑</a></li>
+        <li><a href="#">复制</a></li>
+        <li><a href="#">移动</a></li>
+        <li class="divider"></li>
+        <li><a href="#" class="danger">删除</a></li>
+    </ul>
+
+    <script>
+        const menuBtn = document.querySelector('.menu-btn');
+        const menu = document.getElementById('menu');
+
+        // 动态定位：菜单显示在按钮下方
+        menuBtn.addEventListener('click', () => {
+            if (menu.matches(':popover-open')) return;
+            
+            // 等待 popover 打开后定位
+            requestAnimationFrame(() => {
+                const rect = menuBtn.getBoundingClientRect();
+                menu.style.top = `${rect.bottom + 6}px`;
+                menu.style.left = `${rect.left}px`;
+            });
+        });
+
+        // 点击菜单项后关闭
+        menu.querySelectorAll('a').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log(`点击了: ${item.textContent}`);
+                menu.hidePopover();
+            });
+        });
+    </script>
+</body>
+
+</html>

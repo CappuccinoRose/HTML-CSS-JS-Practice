@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .cards,.neons{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .card {
+        width: 200px;
+        height: 200px;
+        background: #fff;
+        margin: 20px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        /* 语法：X偏移 Y偏移 模糊半径 扩展半径 颜色 */
+        /* 这是一个柔和的、稍微向外扩散的阴影 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 模拟“双色边框”或“霓虹灯”效果 */
+    .neon {
+        background: #d9f5f6;
+        /* 第一层：青色阴影 */
+        /* 第二层：粉色阴影，偏移量不同，造成错位感 */
+        box-shadow:
+            0 0 10px #0ff,
+            4px 4px 20px #f0f;
+    }
+</style>
+
+<body>
+  <div class="cards">
+      <div class="card">
+        <p>这是一个卡片</p>
+    </div>
+    <div class="card">
+        <p>这是另一个卡片</p>
+    </div>
+    <div class="card">
+        <p>这是第三个卡片</p>
+    </div>
+  </div>
+    <div class="neons">
+        <div class="neon">
+            <p>这是一个霓虹灯卡片</p>
+        </div>
+        <div class="neon">
+            <p>这是另一个霓虹灯卡片</p>
+        </div>
+         <div class="neon">
+            <p>这是第三个霓虹灯卡片</p>
+        </div>
+
+    </div>
+
+</body>
+
+</html>

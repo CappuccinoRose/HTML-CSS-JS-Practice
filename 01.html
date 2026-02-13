@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    main {
+        position: relative;
+        width: 85%;
+        margin: 25vh auto;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border: #a1c3e5 solid 1px;
+    }
+
+    main::before, .origin::before , .decorated::before{
+        content: "这是main盒子";
+        width: 120px;
+        height: 30px;
+        line-height: 30px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background: linear-gradient(90deg, #a1c3e5, #d4e6f1);
+        opacity: 0.5;
+        border-radius: 20px;
+    }
+
+    .origin,.decorated {
+        position: relative;
+        border: #2c3e50 solid 1px;
+        border-radius: 20px;
+        padding:20px;
+    }
+
+    .origin::before {
+        content: "这是原标签";
+    }
+
+    .decorated {
+        border: #7f8c8d solid 1px;
+    }
+
+    .decorated::before {
+        content: "这是装饰标签";
+    }
+</style>
+
+<body>
+    <main>
+        <div class="origin">
+            <h1>我的第一个标题</h1>
+            <p>我的第一个段落</p>
+        </div>
+        <!-- CSS：装修（通过 style 属性简单演示） -->
+        <div class="decorated">
+            <h1 style="color: #2c3e50; text-align: center;">我的第一个标题</h1>
+            <p style="color: #7f8c8d; font-size: 16px;text-align:center">我的第一个段落</p>
+        </div>
+    </main>
+</body>
+
+</html>
