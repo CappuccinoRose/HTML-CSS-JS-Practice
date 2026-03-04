@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片动画 - Made By CappuccinoRose</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            gap: 30px;
+            overflow-x: hidden;
+        }
+
+        .section-title {
+            color: rgba(255,255,255,0.8);
+            font-size: 18px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 300;
+            position: relative;
+        }
+        
+        /* 标题装饰线 */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: #a8c4c9;
+            margin: 8px auto 0;
+            transition: width 0.3s;
+        }
+
+        .section-title:hover::after {
+            width: 100%;
+        }
+
+        /* 容器 */
+        .gallery-container {
+            display: flex;
+            width: 90%;
+            max-width: 1000px;
+            height: 400px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            position: relative;
+            perspective: 1000px; 
+        }
+
+        /* 列表项 */
+        .gallery-item {
+            flex: 1;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* 悬停展开 */
+        .gallery-item:hover {
+            flex: 3;
+            z-index: 10;
+        }
+
+        .gallery-container:hover .gallery-item:not(:hover) {
+            flex: 0.8;
+            filter: brightness(0.7);
+        }
+
+        /* 图片层 */
+        .img-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            transition: all 0.6s ease;
+        }
+
+        .img-default {
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .img-hover {
+            opacity: 0;
+            z-index: 1;
+            transform: scale(1.1);
+        }
+
+        .gallery-item:hover .img-default {
+            opacity: 0;
+        }
+
+        .gallery-item:hover .img-hover {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 底部渐变文字遮罩 */
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 30px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            color: #fff;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .gallery-item:hover .overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            letter-spacing: 2px;
+        }
+
+        .hero-title {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            letter-spacing: 1px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 1px;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            z-index: 20;
+        }
+        .gallery-item:last-child::after {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 第一组：水墨风华 -->
+    <h3 class="section-title">水墨风华 · 英雄录</h3>
+    <div class="gallery-container">
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/ink1/600/800?grayscale" alt="默认图">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/ink1_c/600/800" alt="悬停图">
+                <div class="overlay">
+                    <div class="hero-name">剑指苍穹</div>
+                    <div class="hero-title">一剑光寒定九州</div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/ink2/600/800?grayscale" alt="默认图">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/ink2_c/600/800" alt="悬停图">
+                <div class="overlay">
+                    <div class="hero-name">霓裳羽衣</div>
+                    <div class="hero-title">舞转回红袖歌愁敛翠钿</div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/ink3/600/800?grayscale" alt="默认图">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/ink3_c/600/800" alt="悬停图">
+                <div class="overlay">
+                    <div class="hero-name">龙战于野</div>
+                    <div class="hero-title">吾之荣耀离别已久</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第二组：璀璨星河 -->
+    <h3 class="section-title">璀璨星河 · 皮肤展</h3>
+    <div class="gallery-container">
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/star1/400/400" alt="头像">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/star1_b/800/600" alt="海报">
+                <div class="overlay">
+                    <div class="hero-name">凤求凰</div>
+                    <div class="hero-title">凤兮凤兮归故乡</div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/star2/400/400" alt="头像">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/star2_b/800/600" alt="海报">
+                <div class="overlay">
+                    <div class="hero-name">天鹅之梦</div>
+                    <div class="hero-title">优雅的诅咒</div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/star3/400/400" alt="头像">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/star3_b/800/600" alt="海报">
+                <div class="overlay">
+                    <div class="hero-name">全息碎影</div>
+                    <div class="hero-title">镜像撕裂现实</div>
+                </div>
+            </div>
+        </div>
+        <div class="gallery-item">
+            <div class="img-layer img-default">
+                <img src="https://picsum.photos/seed/star4/400/400" alt="头像">
+            </div>
+            <div class="img-layer img-hover">
+                <img src="https://picsum.photos/seed/star4_b/800/600" alt="海报">
+                <div class="overlay">
+                    <div class="hero-name">杀手不太冷</div>
+                    <div class="hero-title">黄昏见证真正的信徒</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            // 动画效果已由CSS主要接管，此处保留JS结构以便后续扩展
+        });
+    </script>
+</body>
+</html>
